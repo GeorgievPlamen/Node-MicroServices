@@ -10,7 +10,7 @@ const posts = {};
 
 app.get("/posts", (_, res) => res.send(posts));
 
-app.get("/events", (req, res) => {
+app.post("/events", (req, res) => {
     const { type, data } = req.body;
 
     if (type === "PostCreated") {
@@ -23,10 +23,13 @@ app.get("/events", (req, res) => {
         const { id, content, postId } = data;
 
         const post = posts[postId];
+
         post.comments.push({ id, content });
 
         res.send({});
     }
+
+    console.log(posts);
 })
 
 app.listen(4002, () => console.log("Listening on 4002"))
