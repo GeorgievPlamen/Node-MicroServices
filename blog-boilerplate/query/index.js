@@ -13,6 +13,8 @@ app.get("/posts", (_, res) => res.send(posts));
 app.post("/events", (req, res) => {
     const { type, data } = req.body;
 
+    console.log(`Received: ${type} \n\n ${data}\n`)
+
     if (type === "PostCreated") {
         const { id, title } = data;
 
@@ -33,9 +35,16 @@ app.post("/events", (req, res) => {
         const post = posts[postId];
         const comment = post.comments.find(c => c.id === id);
 
+        console.log(data);
+
+        console.log(content);
+        console.log(status);
+
         comment.content = content;
         comment.status = status;
 
+        console.log(comment);
+        console.log(posts);
         res.send({});
     }
 
