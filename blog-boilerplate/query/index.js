@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import axios from "axios";
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,6 +14,22 @@ app.get("/posts", (_, res) => res.send(posts));
 app.post("/events", (req, res) => {
     const { type, data } = req.body;
 
+    handleEvent(type, data);
+
+    res.send({});
+})
+
+app.listen(4002, async () => {
+    console.log("Listening on 4002");
+    const res = await axios.get('http://localhost:4005/events');
+
+    for (let event of res.data) {
+        console.log("Processing event: ", event);
+        handleEvent(event.type, event.data);
+    }
+})
+
+function handleEvent(type, data) {
     console.log(`Received: ${type} \n\n ${data}\n`)
 
     if (type === "PostCreated") {
@@ -27,7 +44,6 @@ app.post("/events", (req, res) => {
 
         post.comments.push({ id, content, status });
 
-        res.send({});
     }
 
     if (type === "CommentUpdated") {
@@ -35,20 +51,7 @@ app.post("/events", (req, res) => {
         const post = posts[postId];
         const comment = post.comments.find(c => c.id === id);
 
-        console.log(data);
-
-        console.log(content);
-        console.log(status);
-
         comment.content = content;
         comment.status = status;
-
-        console.log(comment);
-        console.log(posts);
-        res.send({});
     }
-
-    console.log(posts);
-})
-
-app.listen(4002, () => console.log("Listening on 4002"))
+}
