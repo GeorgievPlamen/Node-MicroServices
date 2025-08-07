@@ -12,10 +12,10 @@ app.post('/events', (req, res) => {
     events.push(event);
 
     console.log("Posting event: ", event);
-    axios.post("http://localhost:4000/events", event).catch(e => console.log(e.message));
-    axios.post("http://localhost:4001/events", event).catch(e => console.log(e.message));
-    axios.post("http://localhost:4002/events", event).catch(e => console.log(e.message));
-    axios.post("http://localhost:4003/events", event).catch(e => console.log(e.message));
+    axios.post("http://posts-clutserip-srv:4000/events", event).catch(e => console.log(e.message));
+    axios.post("http://comments-clutserip-srv:4001/events", event).catch(e => console.log(e.message));
+    axios.post("http://query-clutserip-srv:4002/events", event).catch(e => console.log(e.message));
+    axios.post("http://moderation-clutserip-srv:4003/events", event).catch(e => console.log(e.message));
 
     res.send({ status: "OK" });
 })
