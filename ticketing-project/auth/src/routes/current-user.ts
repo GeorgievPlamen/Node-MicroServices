@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
-import { currentUser } from "../middlewares/current-user";
+import { currentUser } from "@gp-tickets/common";
 
 const router = express.Router();
 
 router.get(
   "/api/users/currentuser",
+  //
   [currentUser],
   (req: Request, res: Response) => {
     res.send({ currentUser: req.currentUser ?? null });
