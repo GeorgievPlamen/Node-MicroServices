@@ -36,6 +36,10 @@ router.put(
     ticket.title = title;
     ticket.price = price;
 
+    console.log(
+      `Updating a ticket:\n  title:${ticket.title}\n price:${ticket.price}\n userId: ${ticket.userId}`
+    );
+
     await ticket.save();
 
     res.status(200).send(ticket);

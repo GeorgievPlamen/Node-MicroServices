@@ -25,6 +25,10 @@ router.post(
       userId: req.currentUser!.id,
     });
 
+    console.log(
+      `Creating a ticket:\n  title:${ticket.title}\n price:${ticket.price}\n userId: ${ticket.userId}`
+    );
+
     await ticket.save();
 
     res.status(201).send(ticket);
