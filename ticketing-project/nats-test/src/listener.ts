@@ -17,7 +17,11 @@ stan.on("connect", () => {
     process.exitCode();
   });
 
-  const options = stan.subscriptionOptions().setManualAckMode(true);
+  const options = stan
+    .subscriptionOptions()
+    .setManualAckMode(true)
+    .setDeliverAllAvailable()
+    .setDurableName("accounting-service");
 
   const subscription = stan.subscribe(
     "ticket:created",
