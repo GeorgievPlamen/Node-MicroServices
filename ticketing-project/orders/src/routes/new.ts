@@ -9,6 +9,8 @@ import { body } from "express-validator";
 import { Ticket } from "../models/ticket";
 import { Order } from "../models/order";
 import { OrderStatus } from "@gp-tickets/common/build/events/types/order-status";
+import { OrderCreatedPublisher } from "../events/publisher/order-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -43,6 +45,16 @@ router.post(
     });
 
     await order.save();
+    await new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: order.ticket.id,
+        price: order.ticket.price,
+      },
+    });
 
     res.status(201).send(order);
   }
