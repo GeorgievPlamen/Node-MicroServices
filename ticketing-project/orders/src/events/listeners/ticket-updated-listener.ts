@@ -18,11 +18,8 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     },
     msg: Message
   ) {
-    const { title, price, id } = data;
-    const ticket = await Ticket.findOne({
-      _id: data.id,
-      version: data.version - 1,
-    });
+    const { title, price } = data;
+    const ticket = await Ticket.findByEvent(data);
 
     if (!ticket) {
       throw new NotFoundError();
