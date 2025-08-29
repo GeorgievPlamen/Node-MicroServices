@@ -32,6 +32,13 @@ build:
         manual:
           - dest: .
             src: "src/**/*.ts"
+    # - image: georgievp/expiration
+    #   docker:
+    #     dockerfile: Dockerfile
+    #   sync:
+    #     manual:
+    #       - dest: .
+    #         src: "src/**/*.ts"
     - image: georgievp/ticketing/orders
       context: orders
       docker:
