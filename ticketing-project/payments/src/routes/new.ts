@@ -11,6 +11,8 @@ import { Order } from "../models/order";
 import { OrderStatus } from "@gp-tickets/common/build/events/types/order-status";
 import { stripe } from "../stripe";
 import { Payment } from "../models/payment";
+import PaymentCreatedPublisher from "../events/publishers/payment-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -42,12 +44,19 @@ router.post(
       source: token,
     });
 
-    await Payment.build({
+    const payment = Payment.build({
       orderId: order.id,
       stripeId: charge.id,
-    }).save();
+    });
+    await payment.save();
+    await new PaymentCreatedPublisher(natsWrapper.client).publish({
+      // @ts-ignore
+      id: payment._id,
+      chargeId: payment.stripeId,
+      stripeId: payment.orderId,
+    });
 
-    res.send({ success: true });
+    res.send({ success: true, payment: payment });
   }
 );
 
